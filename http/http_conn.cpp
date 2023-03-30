@@ -538,7 +538,7 @@ bool http_conn::write()
 
         if (temp < 0)
         {
-            if (errno == EAGAIN)
+            if (errno == EAGAIN)  //判断发送缓冲区是否满了，在非阻塞描述符中起作用(有多少写多少)；阻塞描述中是会阻塞到发送缓冲区中的大小大于等于要发送的数据大小时，函数才会被调用。
             {
                 modfd(m_epollfd, m_sockfd, EPOLLOUT, m_TRIGMode);
                 return true;
@@ -549,13 +549,13 @@ bool http_conn::write()
 
         bytes_have_send += temp;
         bytes_to_send -= temp;
-        if (bytes_have_send >= m_iv[0].iov_len)
+        if (bytes_have_send >= m_iv[0].iov_len)  //第一个iovec头部信息的数据已发送完，发送第二个iovec数据
         {
             m_iv[0].iov_len = 0;
             m_iv[1].iov_base = m_file_address + (bytes_have_send - m_write_idx);
             m_iv[1].iov_len = bytes_to_send;
         }
-        else
+        else  //继续发送第一个iovec头部信息的数据
         {
             m_iv[0].iov_base = m_write_buf + bytes_have_send;
             m_iv[0].iov_len = m_iv[0].iov_len - bytes_have_send;
