@@ -202,11 +202,11 @@ private:
     locker m_mutex;
     cond m_cond;
 
-    T *m_array;
-    int m_size;
+    T *m_array;  // 循环数组
+    int m_size;  
     int m_max_size;
-    int m_front;
-    int m_back;
+    int m_front; // 循环数组移除数据时的位置
+    int m_back;  // 循环数组存放新增数据时的位置
 };
 
 #endif
