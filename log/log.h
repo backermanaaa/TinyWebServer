@@ -41,7 +41,7 @@ private:
         while (m_log_queue->pop(single_log))
         {
             m_mutex.lock();
-            fputs(single_log.c_str(), m_fp);
+            fputs(single_log.c_str(), m_fp);  // 把string类型的字符串转换成C风格字符串(指向char类型的数组)以满足fputs第一个参数的类型。
             m_mutex.unlock();
         }
     }
